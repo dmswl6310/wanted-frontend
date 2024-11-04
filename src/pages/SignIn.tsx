@@ -12,6 +12,18 @@ export default function SignIn() {
 
   const handleLogin = (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    fetch("http://localhost:8080/users/login", {
+      method: "POST",
+      headers: [["Content-Type", "application/json"]],
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
   };
 
   return (
