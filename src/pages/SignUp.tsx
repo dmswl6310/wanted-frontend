@@ -1,28 +1,34 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [resultMessage, setResultMessage] = useState("");
 
   const emailRegrex = /.*@+.*\.+.*/;
   const passwordRegrex = /.{8,}/;
   const isValid = emailRegrex.test(email) && passwordRegrex.test(password);
+  const navigate = useNavigate();
 
-  const handleSignUp = (e: { preventDefault: () => void }) => {
+  const handleSignUp = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    fetch("http://localhost:8080/users/create", {
+    const response = await fetch("http://localhost:8080/users/create", {
       method: "POST",
       headers: [["Content-Type", "application/json"]],
       body: JSON.stringify({
         email: email,
         password: password,
       }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      });
+    });
+
+    if (response.status == 200) {
+      navigate("/");
+    } else {
+      const result = await response.json();
+      setResultMessage(result.details);
+    }
   };
 
   return (
@@ -50,6 +56,7 @@ export default function SignUp() {
         <button type="submit" disabled={!isValid}>
           회원가입
         </button>
+        {resultMessage}
       </LoginForm>
     </div>
   );
