@@ -1,29 +1,38 @@
-import { SetStateAction, useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [resultMessage, setResultMessage] = useState("");
 
   const emailRegrex = /.*@+.*\.+.*/;
   const passwordRegrex = /.{8,}/;
   const isValid = emailRegrex.test(email) && passwordRegrex.test(password);
+  const navigate = useNavigate();
 
-  const handleLogin = (e: { preventDefault: () => void }) => {
+  const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    fetch("http://localhost:8080/users/login", {
+    const response = await fetch("http://localhost:8080/users/login", {
       method: "POST",
       headers: [["Content-Type", "application/json"]],
       body: JSON.stringify({
         email: email,
         password: password,
       }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      });
+    });
+
+    const result = await response.json();
+
+    if (response.status == 200) {
+      localStorage.clear();
+      localStorage.setItem("email", email);
+      localStorage.setItem("token", result.token);
+      navigate("/");
+    } else {
+      setResultMessage(result.details);
+    }
   };
 
   return (
@@ -51,6 +60,7 @@ export default function SignIn() {
         <button type="submit" disabled={!isValid}>
           로그인
         </button>
+        {resultMessage}
       </LoginForm>
       <Link to="/signup">회원가입</Link>
     </div>

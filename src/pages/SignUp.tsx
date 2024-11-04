@@ -23,10 +23,11 @@ export default function SignUp() {
       }),
     });
 
+    const result = await response.json();
+
     if (response.status == 200) {
       navigate("/");
     } else {
-      const result = await response.json();
       setResultMessage(result.details);
     }
   };
