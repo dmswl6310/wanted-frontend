@@ -26,6 +26,7 @@ export default function SignUp() {
     const result = await response.json();
 
     if (response.status == 200) {
+      alert("회원가입 되었습니다!\n 로그인 해주세요");
       navigate("/");
     } else {
       setResultMessage(result.details);

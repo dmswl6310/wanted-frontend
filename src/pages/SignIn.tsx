@@ -14,6 +14,7 @@ export default function SignIn() {
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+
     const response = await fetch("http://localhost:8080/users/login", {
       method: "POST",
       headers: [["Content-Type", "application/json"]],
@@ -29,6 +30,7 @@ export default function SignIn() {
       localStorage.clear();
       localStorage.setItem("email", email);
       localStorage.setItem("token", result.token);
+      alert("로그인 되었습니다!");
       navigate("/");
     } else {
       setResultMessage(result.details);
