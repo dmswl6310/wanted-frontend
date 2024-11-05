@@ -24,6 +24,7 @@ export default function Home() {
       {isLogined ? (
         <MenuContainer>
           {`안녕하세요. ${localStorage.getItem("email")}님!`}
+          <Link to="/todolist">Todolist</Link>
           <button onClick={handleLogout}>로그아웃</button>
         </MenuContainer>
       ) : (
